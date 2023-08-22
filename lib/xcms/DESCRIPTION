@@ -1,0 +1,144 @@
+Package: xcms
+Version: 3.20.1
+Title: LC-MS and GC-MS Data Analysis
+Description: Framework for processing and visualization of chromatographically
+    separated and single-spectra mass spectral data. Imports from AIA/ANDI NetCDF,
+    mzXML, mzData and mzML files. Preprocesses data for high-throughput, untargeted
+    analyte profiling.
+Authors@R: c(
+	   person(given = "Colin A.", family = "Smith",
+	   email = "csmith@scripps.edu",
+	   role = "ctb"),
+	   person(given = "Ralf", family = "Tautenhahn",
+	   email = "rtautenh@gmail.com",
+	   role = "ctb"),
+	   person(given = "Steffen", family = "Neumann",
+	   email = "sneumann@ipb-halle.de",
+	   role = c("aut", "cre"),
+	   comment = c(ORCID = "0000-0002-7899-7192")),
+	   person(given = "Paul", family = "Benton",
+	   email = "hpbenton@scripps.edu",
+	   role = "ctb"),
+	   person(given = "Christopher", family = "Conley",
+	   email = "cjconley@ucdavis.edu",
+	   role = "ctb"),
+	   person(given = "Johannes", family = "Rainer",
+	   email = "johannes.rainer@eurac.edu",
+	   role = "ctb",
+	   comment = c(ORCID = "0000-0002-6977-7147")),
+	   person(given = "Michael", family = "Witting",
+	   email = "michael.witting@helmholtz-muenchen.de",
+	   role = "ctb"),
+	   person(given = "William", family = "Kumler",
+	   email = "wkumler@uw.edu", role = "ctb",
+	   comment = c(ORCID = "0000-0002-5022-8009"))
+	   )
+Depends:
+    R (>= 4.0.0),
+    BiocParallel (>= 1.8.0),
+    MSnbase (>= 2.21.4)
+Imports:
+    mzR (>= 2.25.3),
+    methods,
+    Biobase,
+    BiocGenerics,
+    ProtGenerics (>= 1.25.1),
+    lattice,
+    RColorBrewer,
+    plyr,
+    RANN,
+    MassSpecWavelet (>= 1.5.2),
+    S4Vectors,
+    robustbase,
+    IRanges,
+    SummarizedExperiment,
+    MsCoreUtils,
+    MsFeatures
+Suggests:
+    BiocStyle,
+    caTools,
+    knitr (>= 1.1.0),
+    faahKO,
+    msdata (>= 0.25.1),
+    ncdf4,
+    testthat,
+    pander,
+    magrittr,
+    rmarkdown,
+    multtest,
+    MALDIquant,
+    pheatmap,
+    Spectra (>= 1.1.17),
+    MsBackendMgf,
+    progress,
+    signal
+Enhances:
+    Rgraphviz,
+    rgl,
+    XML
+License: GPL (>= 2) + file LICENSE
+URL: https://github.com/sneumann/xcms
+BugReports: https://github.com/sneumann/xcms/issues/new
+VignetteBuilder: knitr
+biocViews: ImmunoOncology, MassSpectrometry, Metabolomics
+RoxygenNote: 7.1.2
+Collate:
+    'AllGenerics.R'
+    'functions-XChromatograms.R'
+    'functions-XChromatogram.R'
+    'DataClasses.R'
+    'Deprecated.R'
+    'MPI.R'
+    'c.R'
+    'cwTools.R'
+    'databases.R'
+    'functions-MsFeatureData.R'
+    'do_adjustRtime-functions.R'
+    'functions-binning.R'
+    'do_findChromPeaks-functions.R'
+    'functions-Params.R'
+    'do_groupChromPeaks-functions.R'
+    'fastMatch.R'
+    'functions-Chromatogram.R'
+    'functions-utils.R'
+    'functions-IO.R'
+    'functions-OnDiskMSnExp.R'
+    'functions-ProcessHistory.R'
+    'functions-XCMSnExp.R'
+    'functions-imputation.R'
+    'functions-normalization.R'
+    'functions-xcmsEIC.R'
+    'functions-xcmsFragments.R'
+    'functions-xcmsRaw.R'
+    'functions-xcmsSet.R'
+    'functions-xcmsSwath.R'
+    'init.R'
+    'matchpeaks.R'
+    'methods-Chromatogram.R'
+    'methods-IO.R'
+    'methods-MChromatograms.R'
+    'methods-MsFeatureData.R'
+    'methods-OnDiskMSnExp.R'
+    'methods-Params.R'
+    'methods-ProcessHistory.R'
+    'methods-XCMSnExp.R'
+    'methods-XChromatogram.R'
+    'methods-XChromatograms.R'
+    'methods-group-features.R'
+    'methods-xcmsEIC.R'
+    'methods-xcmsFileSource.R'
+    'methods-xcmsFragments.R'
+    'methods-xcmsPeaks.R'
+    'methods-xcmsRaw.R'
+    'methods-xcmsSet.R'
+    'models.R'
+    'mzClust.R'
+    'plotQC.R'
+    'ramp.R'
+    'specDist.R'
+    'write.mzquantML.R'
+    'writemzdata.R'
+    'writemztab.R'
+    'xcmsSource.R'
+    'xdata.R'
+    'zzz.R'
