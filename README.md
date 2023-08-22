@@ -1,2 +1,2 @@
-# MAPSEQ
- Matching-of-peptide-sequences
+# MAPSEQ (Matching-of-peptide-sequences)
+
