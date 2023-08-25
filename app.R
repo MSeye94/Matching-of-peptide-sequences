@@ -49,7 +49,7 @@ ui <- fluidPage(
     
     
     tabPanel("Peaks Grouping",
-             
+             fluidRow(br()),
              sidebarLayout(
                
                
@@ -165,9 +165,10 @@ ui <- fluidPage(
     
     
     
+    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~Matching~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
     
     tabPanel("Matching",
-             
+             fluidRow(br()),
              sidebarLayout(
                
                
@@ -258,8 +259,9 @@ ui <- fluidPage(
              
              ),
     
+    ###~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Time correction
     tabPanel("CE-time correction",
-             
+             fluidRow(br()),
              
              sidebarLayout(
                
@@ -312,7 +314,7 @@ ui <- fluidPage(
                           min = 0,
                           max = 1,
                           step = 0.01,
-                          value = 0  
+                          value = 0.1  
                         )
                  )),
                  
@@ -521,8 +523,13 @@ server <- function(input, output, session) {
           
           data_match$Match<-"No match"
           
+          #define data_rt$data
+          
           data_rt$data<-data_match[,c("rt1","rt2")]
           data_rt$data<-data_rt$data[!is.na(data_rt$data$rt2),]
+
+          
+          view(data_rt$data)
           
           if(is.element(TRUE, !is.na(data_match$rt2)))
             data_match[!is.na(data_match$rt2),]$Match<-"Matched"
@@ -673,11 +680,15 @@ server <- function(input, output, session) {
  
   
   observe({
-    if(!is.null(data_rt)){
+    if(!is.null(data_rt$data)){
+      
       
       if(is.na(input$rt_min_cut) & is.na(input$rt_max_cut)){
         data_rt_filter$data<-data_rt$data
       }
+      
+     
+      
       }
   })
   
@@ -692,7 +703,7 @@ server <- function(input, output, session) {
         if(is.na(input$rt_min_cut) & !is.na(input$rt_max_cut)){
           
           data_rt_filter$data<-data_rt$data %>%
-          dplyr::filter(rt2<=as.numeric(input$rt_max_cut))
+            dplyr::filter(rt2<=as.numeric(input$rt_max_cut))
         } else if(!is.na(input$rt_min_cut) & is.na(input$rt_max_cut)){
           
           data_rt_filter$data<-data_rt$data %>%
@@ -702,9 +713,11 @@ server <- function(input, output, session) {
           data_rt_filter$data<-data_rt$data %>%
             dplyr::filter(rt2>=as.numeric(input$rt_min_cut), rt2<=as.numeric(input$rt_max_cut))
         }
+
+
       }
-      
-      
+
+
     })
 
                           
@@ -786,8 +799,10 @@ server <- function(input, output, session) {
             input$fitModel
           }
           ,{
-              
-              if(!is.null(data_dens_filter())){
+            
+            dataDensity<-isolate(data_dens_filter())  
+            
+              if(!is.null(dataDensity)){
                 
                 withProgress(message = 'Fit model...', value = 0, {
                   
@@ -799,23 +814,24 @@ server <- function(input, output, session) {
                                       ckertype = input$ckertype,
                                       #bwmethod = "cv.aic",
                                       gradients = TRUE,
-                                      data = isolate(data_dens_filter()))
+                                      data = dataDensity)
                   
                   if(!is.null(model.np$val)){
                     
                     incProgress(1/3, detail = paste(round(2*100/3,0),"%..."))
                     output$distPlot <- renderPlot({
                       
-                      #predict_data_model.np<-data.frame(rt1 = fitted(req(model.np$val)), rt2 = isolate(data_dens_filter()$rt2))
-                      predict_data_model.np<-data.frame(rt1 = predict(model.np$val, 
-                                                                      newdata = data.frame(rt2 = seq(min(range(data_rt_filter$data$rt2)[1], 
+                      predict_data_model.np<-data.frame(rt1 = fitted(req(model.np$val)), rt2 = dataDensity$rt2)
+                      predict_data_model.np<-data.frame(rt1 = predict(model.np$val,
+                                                                      newdata = data.frame(rt2 = seq(min(range(data_rt_filter$data$rt2)[1],
                                                                                                          range(data_rt_filter$data$rt1)[1]),
-                                                                                                     max(range(data_rt_filter$data$rt2)[2], 
-                                                                                                         range(data_rt_filter$data$rt1)[2])), by = 50)), 
-                                                        rt2 = seq(min(range(data_rt_filter$data$rt2)[1], 
+                                                                                                     max(range(data_rt_filter$data$rt2)[2],
+                                                                                                         range(data_rt_filter$data$rt1)[2])), by = 50)),
+                                                        rt2 = seq(min(range(data_rt_filter$data$rt2)[1],
                                                                       range(data_rt_filter$data$rt1)[1]),
-                                                                  max(range(data_rt_filter$data$rt2)[2], 
+                                                                  max(range(data_rt_filter$data$rt2)[2],
                                                                       range(data_rt_filter$data$rt1)[2])), by = 50)
+                      
                       
                       
                       median_line<-seq(min(range(data_rt_filter$data$rt2)[1], 
@@ -834,6 +850,8 @@ server <- function(input, output, session) {
                                                 max(range(data_rt_filter$data$rt2)[2], range(data_rt_filter$data$rt1)[2])),
                                         ylim = c(min(range(data_rt_filter$data$rt2)[1], range(data_rt_filter$data$rt1)[1]),
                                                  max(range(data_rt_filter$data$rt2)[2], range(data_rt_filter$data$rt1)[2])))+
+
+                      
                         
                         scale_x_continuous(n.breaks = 14)+
                         scale_y_continuous(n.breaks = 14)+
@@ -864,6 +882,21 @@ server <- function(input, output, session) {
                     
                     incProgress(1/3, detail = paste(round(3*100/3,0),"%..."))
                     ### Adjust the CE-time new sample
+                    
+                    if(is.na(input$rt_min_cut) & !is.na(input$rt_max_cut)){
+                      
+                      new_sample$data<-new_sample$data %>%
+                        dplyr::filter(rt<=as.numeric(input$rt_max_cut))
+                    } else if(!is.na(input$rt_min_cut) & is.na(input$rt_max_cut)){
+                      
+                      new_sample$data<-new_sample$data %>%
+                        dplyr::filter(rt>=as.numeric(input$rt_min_cut))
+                    } else if(!is.na(input$rt_min_cut) & !is.na(input$rt_max_cut)){
+                      
+                      new_sample$data<-new_sample$data %>%
+                        dplyr::filter(rt>=as.numeric(input$rt_min_cut), rt<=as.numeric(input$rt_max_cut))
+                    }
+                    
                     
                     new_sample_adjusted$data<-new_sample$data
                     

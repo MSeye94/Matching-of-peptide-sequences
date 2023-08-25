@@ -193,19 +193,19 @@ matchRtMz <- function(x,
         
         if (length(matches)) {
           
-          matches <- matches[which(abs(mz2[matches]-mz1[i])<=MsCoreUtils::ppm(mz1[i], 100))]
+          #matches <- matches[which(abs(mz2[matches]-mz1[i])<=MsCoreUtils::ppm(mz1[i], 100))]
           
-          # if(mz1[i]<4000){
-          #   matches <- matches[which(abs(mz2[matches]-mz1[i])<=MsCoreUtils::ppm(mz1[i], 50))]
-          # } else if(mz1[i]>=4000 & mz1[i]<=6000){
-          #   ##fite a linear model between 4KDA et 6KDA to get ppm (50-150)
-          #   Data.model<-data.frame(KDA = seq(from = 4, to = 6, by=0.1)*1000, ppm.data = seq(from = 50, to = 150, by=5))
-          #   model.ppm<-lm(ppm.data~KDA, data = Data.model)
-          #   ppm.pred<-as.double(predict.lm(model.ppm, newdata = data.frame(KDA=mz1[i])))
-          #   matches <- matches[which(abs(mz2[matches]-mz1[i])<=MsCoreUtils::ppm(mz1[i],ppm.pred))]
-          # } else {
-          #   matches <- matches[which(abs(mz2[matches]-mz1[i])<=MsCoreUtils::ppm(mz1[i], 150))]
-          # }
+          if(mz1[i]<4000){
+            matches <- matches[which(abs(mz2[matches]-mz1[i])<=MsCoreUtils::ppm(mz1[i], 50))]
+          } else if(mz1[i]>=4000 & mz1[i]<=6000){
+            ##fite a linear model between 4KDA et 6KDA to get ppm (50-150)
+            Data.model<-data.frame(KDA = seq(from = 4, to = 6, by=0.1)*1000, ppm.data = seq(from = 50, to = 150, by=5))
+            model.ppm<-lm(ppm.data~KDA, data = Data.model)
+            ppm.pred<-as.double(predict.lm(model.ppm, newdata = data.frame(KDA=mz1[i])))
+            matches <- matches[which(abs(mz2[matches]-mz1[i])<=MsCoreUtils::ppm(mz1[i],ppm.pred))]
+          } else {
+            matches <- matches[which(abs(mz2[matches]-mz1[i])<=MsCoreUtils::ppm(mz1[i], 150))]
+          }
           
           
           if (length(matches)) {
